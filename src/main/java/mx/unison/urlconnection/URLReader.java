@@ -45,7 +45,7 @@ public class URLReader {
             long size = connection.getContentLengthLong();
 
             System.out.println("Tipo: " + tipoContenido );
-            System.out.println("Tamanio en bytes: " + size );
+            System.out.println("Tamaño en bytes: " + size );
             System.out.println("");
 
         } catch (IOException ex) {
