@@ -1,25 +1,28 @@
 package mx.unison.urls;
 
+
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ParseURL {
-    public static final String URL_STRING = "https://docs.oracle.com:80/javase/8/docs/api/java/net/URL.html#constructor.summary";
+    public static final String URL_STRING =
+            "https://docs.oracle.com:80/javase/8/docs/api/java/net/URL.html#constructor.summary";
+
 // "https://www.gutenberg.org:8080/ebooks/search/?author=Pedro"
     // https://docs.oracle.com/javase/8/docs/api/java/net/URL.html
     // https://docs.oracle.com/javase/8/docs/api/java/net/URL.html#constructor.summary
+    // https://docs.oracle.com/javase/8/docs/api/java/net/URL.html
 
     public static void main(String[] args) {
 
+        URI uri = URI.create(URL_STRING);
+
         URL aURL = null;
         try {
-            //aURL = new URL("//docs.oracle.com/javase/8/docs/api/java/net/URL.html#constructor.summary");
-            aURL = new URL(URL_STRING);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(ParseURL.class.getName()).log(Level.SEVERE, null, ex);
-            System.exit(1);
+            aURL = uri.toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
         }
 
         System.out.println("protocol: " + aURL.getProtocol());
