@@ -19,7 +19,7 @@ public class ManejadorEtiquetas extends HTMLEditorKit.ParserCallback {
 
     @Override
     public void handleStartTag(HTML.Tag tag, MutableAttributeSet attributeSet, int pos) {
-
+        // Solo interesa el contenido de las etiquetas H1, H2, H3, H4 y TITLE
         if (tag == HTML.Tag.H1) {
             lastTag = tag;
         }
@@ -38,27 +38,28 @@ public class ManejadorEtiquetas extends HTMLEditorKit.ParserCallback {
         }
     }
 
-
     @Override
     public void handleText(char[] data, int pos) {
-        String contenido = new String(data);
+        String contenidoEtiqueta = new String(data);
 
         if (lastTag == HTML.Tag.TITLE) {
-            contenido = contenido.trim().toUpperCase();
-            System.out.println(contenido);
+            contenidoEtiqueta = contenidoEtiqueta.trim().toUpperCase();
+            System.out.println(contenidoEtiqueta);
         }
         if (lastTag == HTML.Tag.H1) {
-            System.out.println(contenido);
+            System.out.println(contenidoEtiqueta);
         }
         if (lastTag == HTML.Tag.H2) {
-            System.out.printf("\t%s\n", contenido);
+            System.out.printf("\t%s\n", contenidoEtiqueta);
         }
         if (lastTag == HTML.Tag.H3) {
-            System.out.printf("\t\t%s\n", contenido);
+            System.out.printf("\t\t%s\n", contenidoEtiqueta);
         }
         if (lastTag == HTML.Tag.H4) {
-            System.out.printf("\t\t\t%s\n", contenido);
+            System.out.printf("\t\t\t%s\n", contenidoEtiqueta);
         }
+
+        // Resetear la última etiqueta procesada
         lastTag = null;
 
     }
