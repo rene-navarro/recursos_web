@@ -33,12 +33,20 @@ public class ManejadorEtiquetas extends HTMLEditorKit.ParserCallback {
             lastTag = tag;
         }
 
+        if (tag == HTML.Tag.TITLE) {
+            lastTag = tag;
+        }
     }
 
 
     @Override
     public void handleText(char[] data, int pos) {
         String contenido = new String(data);
+
+        if (lastTag == HTML.Tag.TITLE) {
+            contenido = contenido.trim().toUpperCase();
+            System.out.println(contenido);
+        }
         if (lastTag == HTML.Tag.H1) {
             System.out.println(contenido);
         }
