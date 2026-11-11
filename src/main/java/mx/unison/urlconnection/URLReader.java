@@ -34,7 +34,8 @@ public class URLReader {
 
         try {
             // pageURL = new URL("https://people.sc.fsu.edu/~jburkardt/data/csv/csv.html");
-            URI uri = URI.create("https://people.sc.fsu.edu/~jburkardt/data/xml/ell_65.xml");
+            //URI uri = URI.create("https://people.sc.fsu.edu/~jburkardt/data/xml/ell_65.xml");
+            URI uri = URI.create("https://people.sc.fsu.edu/~jburkardt/data/csv/csv.html");
 
             pageURL = uri.toURL();
 

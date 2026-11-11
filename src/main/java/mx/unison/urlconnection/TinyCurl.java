@@ -78,6 +78,9 @@ public class TinyCurl {
         if( path != null ) {
             // Extraer el nombre del archivo del path de la URL
             fileName = path.substring(path.lastIndexOf('/') + 1);
+            if( fileName == null  || fileName.equals("") ) {
+                fileName = "output.bin";
+            }
         }
 
         BufferedOutputStream localFile = null;
@@ -128,6 +131,10 @@ public class TinyCurl {
 
         if( path != null ) {
             fileName = path.substring(path.lastIndexOf('/') + 1);
+
+            if( fileName == null  || fileName.equals("") ) {
+                fileName = "output.txt";
+            }
         }
 
         PrintWriter localFile = null;
@@ -135,7 +142,8 @@ public class TinyCurl {
         try {
             localFile = new PrintWriter(fileName);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+           LOG.severe(e.getMessage());
+            System.exit(2);
         }
 
         BufferedReader fromServer = null;
@@ -144,6 +152,7 @@ public class TinyCurl {
                     new InputStreamReader( connection.getInputStream() ));
         } catch (IOException ex) {
             LOG.severe(ex.getMessage());
+            System.exit(2);
         }
 
         String inputLine = null;

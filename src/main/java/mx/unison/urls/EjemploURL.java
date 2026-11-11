@@ -13,7 +13,8 @@ public class EjemploURL {
     public static void main(String[] args) {
 
         // Primero crear un URI y luego convertirlo a URL
-        URI uri = URI.create("https://docs.oracle.com/javase/8/docs/api/java/net/URL.html");
+        //URI uri = URI.create("https://docs.oracle.com/javase/8/docs/api/java/net/URL.html");
+        URI uri = URI.create("https://www.unison.mx/wp-content/themes/awaken/img/logo_unison_sin_tit.png");
 
         URL url = null;
 
