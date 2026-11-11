@@ -6,21 +6,26 @@ import java.util.logging.Logger;
 
 
 // https://identidadbuho.unison.mx/wp-content/uploads/2019/08/BOX5.jpg
-public class Curl {
+public class TinyCurl {
 
-    public static final String TAG = Curl.class.getSimpleName();
-
+    public static final String TAG = TinyCurl.class.getSimpleName();
     public static final Logger LOG = Logger.getLogger(TAG);
 
+    /**
+     * Implementación de un cliente HTTP muy simple, que descarga un recurso web y lo guarda en un archivo local.
+     * @param args
+     */
     public static void main(String[] args) {
 
         if (args.length != 1) {
             System.err.println("Argumentos incorrectos");
+            System.err.println("Uso: java TinyCurl <URL>");
             System.exit(1);
         }
 
         URL url = null;
         try {
+            // verificar que la URL es válida
             URI uri = new URI(args[0]);
             url = uri.toURL();
         } catch (URISyntaxException | MalformedURLException e) {
@@ -28,20 +33,37 @@ public class Curl {
             System.exit(2);
         }
 
-        URLConnection connection = null;
+        // Abrir una conexión con el recurso web
+        URLConnection clientConnection = null;
         String tipoContenido = null;
+
         try {
-            connection = url.openConnection();
-            tipoContenido = connection.getContentType();
+            // aquí se realiza la conexión con el recurso web
+            clientConnection = url.openConnection();
+
+            // obtener el tipo de contenido del recurso web, como referencia consutar:
+            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types
+            tipoContenido = clientConnection.getContentType();
         } catch (IOException e) {
             LOG.severe(e.getMessage());
             System.exit(3);
         }
 
-        if (tipoContenido.startsWith("text")) {
-            descargaTexto(connection);
+        if(tipoContenido == null) {
+            LOG.severe("No se pudo determinar el tipo de contenido del recurso web");
+            System.exit(4);
+        }
+
+        if( tipoContenido.equals("application/json")  ) {
+            descargaTexto(clientConnection);
+        } else if( tipoContenido.equals("application/xml")  ) {
+            descargaTexto(clientConnection);
+        } else if ( tipoContenido.startsWith("text") ) {
+            descargaTexto(clientConnection);
+        } else if ( tipoContenido.startsWith("image") ) {
+            descargaBytes(clientConnection);
         } else {
-            descargaBytes(connection);
+            descargaBytes(clientConnection);
         }
 
     }
@@ -54,24 +76,29 @@ public class Curl {
         String fileName = "output.bin";
 
         if( path != null ) {
+            // Extraer el nombre del archivo del path de la URL
             fileName = path.substring(path.lastIndexOf('/') + 1);
         }
 
         BufferedOutputStream localFile = null;
 
         try {
+            // Crear un flujo de salida para escribir los bytes descargados en un archivo local
             localFile = new BufferedOutputStream(new FileOutputStream(fileName));
         } catch (FileNotFoundException ex) {
             LOG.severe(ex.getMessage());
         }
 
-        BufferedInputStream fromServer=null;
+        BufferedInputStream fromServer = null;
 
         try {
+            // Crear un flujo de entrada para leer los bytes del recurso web
             fromServer = new BufferedInputStream( connection.getInputStream() );
         } catch (IOException ex) {
             LOG.severe(ex.getMessage());
         }
+
+        // Crear un buffer para leer los bytes en bloques
         byte[] buffer = new byte[20];
         int bytesRead;
 
@@ -79,21 +106,17 @@ public class Curl {
             while (( bytesRead = fromServer.read(buffer, 0, buffer.length)) != -1 ) {
                 localFile.write(buffer,0, bytesRead);
                 localFile.flush();
-
             }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         try {
             fromServer.close();
             localFile.close();
         } catch (IOException ex) {
             LOG.severe(ex.getMessage());
         }
-
-
     }
 
     private static void descargaTexto(URLConnection connection) {
